@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#176b52"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="./icons/icon-192.png" type="image/png">
+<title>সুস্মিতা টি-স্টল</title>
+<style>
+:root{--g:#176b52;--bg:#f2f6f4;--line:#dce7e1}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,"Noto Sans Bengali",sans-serif;color:#18251f}header{background:var(--g);color:white;padding:14px 18px;display:flex;align-items:center;gap:12px}header .app-logo{width:54px;height:54px;object-fit:cover;border-radius:13px;background:white}header h1{font-size:21px;margin:0}header p{margin:4px 0 0;font-size:13px}main{max-width:760px;margin:auto;padding:13px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}button{border:0;border-radius:9px;padding:10px;background:#e2eee8;color:var(--g);font:inherit;font-weight:650}.tab.active,.primary{background:var(--g);color:white}.card{background:white;border:1px solid var(--line);border-radius:13px;padding:13px;margin-bottom:12px}h2{font-size:17px;margin:0 0 10px}label{display:block;font-size:13px;color:#5d7066;margin:9px 0 4px}input,select{width:100%;padding:10px;border:1px solid #cbd9d1;border-radius:8px;background:white;font:inherit}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.full{width:100%;margin-top:11px}.muted{font-size:12px;color:#68786f;line-height:1.5}.item{border-bottom:1px solid var(--line);padding:9px 0}.item:last-child{border:0}.small{font-size:12px;color:#68786f}.badge{display:inline-block;border-radius:20px;background:#e4efe9;color:var(--g);padding:2px 8px;font-size:11px}.hidden{display:none!important}.person{display:flex;align-items:center;gap:10px}.avatar{width:44px;height:44px;object-fit:cover;border-radius:50%;background:#e7eee9}.money{font-weight:750}.danger{color:#b42318}.good{color:var(--g)}footer{text-align:center;color:#718078;font-size:11px;padding:12px}
+</style></head>
+<body>
+<header><img class="app-logo" src="./icons/icon-192.png" alt="সুস্মিতা টি-স্টল লোগো"><div><h1>সুস্মিতা টি-স্টল</h1><p>বিক্রি • কাস্টমার বাকি খাতা • মালামাল কেনা • রিপোর্ট</p></div></header>
+<main>
+<div class="tabs">
+<button class="tab active" data-tab="sale">বিক্রি</button>
+<button class="tab" data-tab="customers">কাস্টমার</button>
+<button class="tab" data-tab="purchase">কেনাকাটা</button>
+</div>
+<section id="sale" class="card">
+<h2>নতুন বিক্রি</h2>
+<form id="saleForm">
+<label>পণ্য</label><select id="product"><option>রং চা</option><option>চিতল পিঠা</option><option>সিদ্ধ ডিম</option><option>অন্যান্য</option></select>
+<div class="grid"><div><label>পরিমাণ</label><input id="qty" type="number" min="1" value="1" required></div><div><label>মোট টাকা (৳)</label><input id="amount" type="number" min="0" step=".01" required></div></div>
+<label>বিক্রির ধরন</label><select id="kind"><option value="cash">নগদ বিক্রি</option><option value="credit">বাকি বিক্রি</option></select>
+<div id="custPick" class="hidden"><label>কাস্টমার নির্বাচন (কোড/নাম)</label><select id="customerSelect"></select><p class="muted">নতুন কাস্টমার হলে আগে “কাস্টমার” ট্যাব থেকে যোগ করুন।</p></div>
+<label>কর্মচারী/এন্ট্রি করেছেন</label><input id="staff" placeholder="যেমন: SUS001 (ঐচ্ছিক)">
+<button class="primary full">বিক্রি সেভ করুন</button>
+</form><p class="muted">বাকি বিক্রি সেভ করলেই নির্বাচিত কাস্টমারের খাতায় সঙ্গে সঙ্গে যোগ হবে।</p>
+</section>
+<section id="customers" class="card hidden">
+<h2>কাস্টমার যোগ করুন</h2>
+<form id="customerForm">
+<label>কাস্টমারের নাম</label><input id="cname" required>
+<div class="grid"><div><label>মোবাইল নম্বর</label><input id="phone" inputmode="tel"></div><div><label>ছবি (ঐচ্ছিক)</label><input id="photo" type="file" accept="image/*"></div></div>
+<button class="primary full">কাস্টমার সেভ করুন</button>
+</form>
+<p class="muted">প্রতিটি কাস্টমারের জন্য স্বয়ংক্রিয় Customer Code তৈরি হবে।</p>
+<h2 style="margin-top:16px">কাস্টমার তালিকা</h2><input id="customerSearch" placeholder="কোড, নাম বা মোবাইল দিয়ে খুঁজুন">
+<div id="customerList"></div>
+<div id="customerDetail" class="hidden">
+<hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+<div class="person"><img id="detailPhoto" class="avatar"><div><b id="detailName"></b><div class="small" id="detailInfo"></div></div></div>
+<p>বর্তমান বাকি: <b class="danger" id="detailDue"></b></p>
+<form id="payForm"><label>জমা টাকা (৳)</label><input id="payAmount" type="number" min=".01" step=".01" required><label>নোট (ঐচ্ছিক)</label><input id="payNote"><button class="primary full">টাকা জমা করুন</button></form>
+<h2 style="margin-top:15px">লেনদেনের ইতিহাস</h2>
+<div class="grid"><div><label>শুরুর তারিখ</label><input id="fromDate" type="date"></div><div><label>শেষ তারিখ</label><input id="toDate" type="date"></div></div>
+<button id="filterHistory" class="full">তারিখ অনুযায়ী দেখুন</button>
+<button id="csvBtn" class="full">এই কাস্টমারের Excel-উপযোগী CSV</button>
+<div id="history"></div>
+</div>
+</section>
+<section id="purchase" class="card hidden">
+<h2>মালামাল কেনার হিসাব</h2>
+<form id="purchaseForm">
+<label>মালামাল</label><select id="material"><option>চিনি</option><option>চা পাতা</option><option>আদা</option><option>লং</option><option>গোলমরিচ</option><option>লাকড়ি</option><option>ডিম</option><option>বরতা</option><option>অন্যান্য</option></select>
+<div class="grid"><div><label>পরিমাণ</label><input id="pqty" placeholder="যেমন ২ কেজি" required></div><div><label>মোট দাম (৳)</label><input id="pcost" type="number" min="0" step=".01" required></div></div>
+<label>বিবরণ</label><input id="pnote"><button class="primary full">কেনাকাটা সেভ করুন</button>
+</form><p class="muted">শুধু কেনার হিসাব থাকবে; স্টক বা অবশিষ্ট মাল গণনা হবে না।</p><h2 style="margin-top:15px">কেনাকাটার ইতিহাস</h2><div id="purchases"></div>
+</section>
+<section class="card"><h2>সাম্প্রতিক বিক্রি</h2><div id="sales"></div></section>
+<section class="card"><h2>ব্যাকআপ</h2><button id="backup" class="primary full">সব হিসাব JSON ব্যাকআপ ডাউনলোড</button><p class="muted">ব্যাকআপ ফাইল নিরাপদে রাখুন। এই ডেমোতে তথ্য শুধু এই মোবাইল/ব্রাউজারে থাকে।</p></section>
+</main><footer>সুস্মিতা টি-স্টল • অফলাইন PWA ডেমো</footer>
+<script>
+const KEY='susmita_shop_v3';let db=JSON.parse(localStorage.getItem(KEY)||'{"customers":[],"sales":[],"payments":[],"purchases":[]}');let activeId=null;
+const $=id=>document.getElementById(id), money=n=>'৳'+Number(n||0).toLocaleString('bn-BD',{maximumFractionDigits:2}),stamp=()=>new Date().toISOString(),fmt=t=>new Date(t).toLocaleString('bn-BD',{dateStyle:'medium',timeStyle:'short'});
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));render()};const due=id=>db.sales.filter(x=>x.type==='credit'&&x.customerId===id).reduce((s,x)=>s+x.amount,0)-db.payments.filter(x=>x.customerId===id).reduce((s,x)=>s+x.amount,0);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));['sale','customers','purchase'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab))});
+kind.onchange=()=>custPick.classList.toggle('hidden',kind.value!=='credit');
+customerForm.onsubmit=async e=>{e.preventDefault();let file=photo.files[0],img='';if(file){img=await new Promise(res=>{let r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(file)})}let id='CUS'+String(db.customers.length+1).padStart(3,'0');db.customers.push({id,name:cname.value.trim(),phone:phone.value.trim(),photo:img,created:stamp()});customerForm.reset();save();alert('কাস্টমার যোগ হয়েছে: '+id)};
+saleForm.onsubmit=e=>{e.preventDefault();let type=kind.value,c=db.customers.find(x=>x.id===customerSelect.value);if(type==='credit'&&!c){alert('আগে কাস্টমার যোগ করে নির্বাচন করুন।');return}db.sales.unshift({id:Date.now(),product:product.value,qty:Number(qty.value),amount:Number(amount.value),type,customerId:c?.id||null,staff:staff.value,time:stamp()});saleForm.reset();kind.value='cash';custPick.classList.add('hidden');save();alert('বিক্রি সেভ হয়েছে।')};
+purchaseForm.onsubmit=e=>{e.preventDefault();db.purchases.unshift({id:Date.now(),material:material.value,qty:pqty.value,cost:Number(pcost.value),note:pnote.value,time:stamp()});purchaseForm.reset();save();alert('কেনাকাটা সেভ হয়েছে।')};
+customerSearch.oninput=renderCustomers;
+function openCustomer(id){activeId=id;renderCustomers()}
+payForm.onsubmit=e=>{e.preventDefault();let a=Number(payAmount.value);if(a<=0)return;db.payments.unshift({id:Date.now(),customerId:activeId,amount:a,note:payNote.value,time:stamp()});payForm.reset();save();alert('টাকা জমা হয়েছে।')};
+function getHistory(){let rows=[...db.sales.filter(x=>x.customerId===activeId).map(x=>({...x,label:'বাকি বিক্রি',value:x.amount,sign:'+'})),...db.payments.filter(x=>x.customerId===activeId).map(x=>({...x,label:'টাকা জমা',value:x.amount,sign:'−'}))].sort((a,b)=>new Date(b.time)-new Date(a.time));let f=fromDate.value,t=toDate.value;return rows.filter(x=>(!f||x.time.slice(0,10)>=f)&&(!t||x.time.slice(0,10)<=t))}
+filterHistory.onclick=renderHistory;
+function renderHistory(){let rows=getHistory();history.innerHTML=rows.map(x=>`<div class="item"><b>${x.label}: ${x.sign}${money(x.value)}</b><div class="small">${fmt(x.time)} ${x.product?'• '+esc(x.product):''} ${x.staff?'• '+esc(x.staff):''} ${x.note?'• '+esc(x.note):''}</div></div>`).join('')||'<p class="muted">এই সময়ের কোনো লেনদেন নেই।</p>'}
+csvBtn.onclick=()=>{let c=db.customers.find(x=>x.id===activeId),rows=getHistory(),csv=[['তারিখ-সময়','ধরন','টাকা','পণ্য/নোট'],...rows.map(x=>[fmt(x.time),x.label,x.value,x.product||x.note||''])].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');download('\ufeff'+csv,(c?.id||'customer')+'-history.csv','text/csv;charset=utf-8')};
+function download(data,name,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([data],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+function renderCustomers(){let q=customerSearch.value.toLowerCase();customerList.innerHTML=db.customers.filter(c=>(c.id+c.name+c.phone).toLowerCase().includes(q)).map(c=>`<div class="item person"><img class="avatar" src="${c.photo||''}" onerror="this.style.visibility='hidden'"><div style="flex:1"><b>${esc(c.name)}</b><div class="small">${c.id} • ${esc(c.phone)}</div><div class="small">বাকি: <b class="danger">${money(due(c.id))}</b></div></div><button onclick="openCustomer('${c.id}')">খাতা</button></div>`).join('')||'<p class="muted">কাস্টমার পাওয়া যায়নি।</p>';if(activeId){let c=db.customers.find(x=>x.id===activeId);if(c){customerDetail.classList.remove('hidden');detailPhoto.src=c.photo||'';detailName.textContent=c.name;detailInfo.textContent=c.id+' • '+c.phone;detailDue.textContent=money(due(c.id));renderHistory()}}}
+function render(){customerSelect.innerHTML=db.customers.map(c=>`<option value="${c.id}">${c.id} — ${esc(c.name)} (${esc(c.phone)})</option>`).join('');renderCustomers();sales.innerHTML=db.sales.slice(0,12).map(x=>{let c=db.customers.find(c=>c.id===x.customerId);return `<div class="item"><b>${esc(x.product)} • ${money(x.amount)} <span class="badge">${x.type==='cash'?'নগদ':'বাকি'}</span></b><div class="small">${fmt(x.time)} ${c?'• '+esc(c.name)+' ('+c.id+')':''}</div></div>`}).join('')||'<p class="muted">বিক্রি নেই।</p>';purchases.innerHTML=db.purchases.slice(0,40).map(x=>`<div class="item"><b>${esc(x.material)} • ${money(x.cost)}</b><div class="small">${fmt(x.time)} • ${esc(x.qty)} ${esc(x.note)}</div></div>`).join('')||'<p class="muted">কেনাকাটার হিসাব নেই।</p>'}
+backup.onclick=()=>download(JSON.stringify(db,null,2),'susmita-tee-stall-backup.json','application/json');
+render();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
